@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AirsoftBattleRoyal</string>
+    <string name="ueberschrift">Airsoft Battleroyal APP</string>
+    <string name="button_erstellen">Spiel erstellen</string>
+    <string name="button_beitreten">Spiel beitreten</string>
+    <string name="username">Angezeigter Name</string>
+    <string name="game_create_ueberschrift">Spiel erstellen</string>
+    <string name="game_name">Name des Spiels</string>
+    <string name="set_circle">Mittelpunkt der Zone setzen</string>
+    <string name="erstellen">Spiel erstellen</string>
+</resources>
