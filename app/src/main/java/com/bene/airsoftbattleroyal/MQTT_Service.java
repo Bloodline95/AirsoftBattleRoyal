@@ -18,7 +18,6 @@ import java.io.UnsupportedEncodingException;
 
 abstract class MQTT_Service extends Service {
 
-    int mStartMode;
     private static final String TAG = "TAG";
     final String serverUri = "tcp://m12.cloudmqtt.com:11111";
 
@@ -60,7 +59,7 @@ abstract class MQTT_Service extends Service {
         } catch(MqttException e){
             e.printStackTrace();
         }
-        return mStartMode;
+        return super.onStartCommand(intent,flags,startId);
     }
 
     @Override
