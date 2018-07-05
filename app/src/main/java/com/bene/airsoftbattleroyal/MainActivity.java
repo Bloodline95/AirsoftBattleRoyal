@@ -58,43 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void connect(String user){
-        String clientId = MqttClient.generateClientId();
-        MqttAndroidClient client =
-                new MqttAndroidClient(MainActivity.this, "tcp://broker.hiveqm.com:1883",
-                        clientId);
-
-        MqttConnectOptions options = new MqttConnectOptions();
-        options.setUserName(user);
-        try{
-            IMqttToken token = client.connect(options);
-            token.setActionCallback(new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken iMqttToken) {
-                    //connected
-                    Log.d(TAG, "onSuccess");
-                }
-
-                @Override
-                public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                    //something went wrong
-                    Log.d(TAG, "onFailure");
-                }
-            });
-        } catch(MqttException e){
-            e.printStackTrace();
-        }
-
-        String topic = "foo/SQL_inject";
-        String payload = "0echo \"UPDATE Spieler SET USERNAME = '" + user + "'\" | mysql -uroot -proot root";
-        byte[] encodedPayload = new byte[0];
-        try{
-            encodedPayload = payload.getBytes("UTF-8");
-            MqttMessage message = new MqttMessage(encodedPayload);
-            client.publish(topic, message);
-        }catch(UnsupportedEncodingException | MqttException e){
-            e.printStackTrace();
-        }
-    }
+    
 
 }
