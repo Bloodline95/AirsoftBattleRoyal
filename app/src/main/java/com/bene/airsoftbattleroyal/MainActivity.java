@@ -21,7 +21,7 @@ import java.io.UnsupportedEncodingException;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TAG";
-
+    public MQTT_Service mqtt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, MQTT_Service.class);
                 intent.putExtra("USERNAME", username);
                 startService(intent);
+
 
                 Intent beitreten_intent = new Intent(MainActivity.this, game_choose.class);
                 beitreten_intent.putExtra("USERNAME", username);

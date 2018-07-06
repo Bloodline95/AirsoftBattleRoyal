@@ -19,7 +19,12 @@ import java.io.UnsupportedEncodingException;
 abstract class MQTT_Service extends Service {
 
     private static final String TAG = "TAG";
-    final String serverUri = "tcp://m12.cloudmqtt.com:11111";
+    final String serverUri = "tcp://192.168.178.75:11111";
+    public static MqttAndroidClient nClient;
+    String clientId;
+    String user;
+    MqttAndroidClient client;
+
 
     public MQTT_Service() {
     }
@@ -33,10 +38,9 @@ abstract class MQTT_Service extends Service {
         // The service is starting, due to a call to startService()
         //Connect to Server onCreate
         Bundle bundle = intent.getExtras();
-        String user = bundle.getString("USERNAME");
-        String clientId = MqttClient.generateClientId();
-        MqttAndroidClient client =
-                new MqttAndroidClient(MQTT_Service.this, serverUri, clientId);
+        user = bundle.getString("USERNAME");
+        clientId = MqttClient.generateClientId();
+        client = new MqttAndroidClient(MQTT_Service.this, serverUri, clientId);
 
         MqttConnectOptions options = new MqttConnectOptions();
 
@@ -59,6 +63,7 @@ abstract class MQTT_Service extends Service {
         } catch(MqttException e){
             e.printStackTrace();
         }
+        sendMessage("test");
         return super.onStartCommand(intent,flags,startId);
     }
 
@@ -68,8 +73,8 @@ abstract class MQTT_Service extends Service {
     }
 
     public void sendMessage(String payload){
-        String topic = "foo/SQL_inject";
-        String payload = "0echo \"UPDATE Spieler SET USERNAME = '" + user + "'\" | mysql -uroot -proot root";
+        String topic = "test_channel";
+        //String payload = "0echo \"UPDATE Spieler SET USERNAME = '" + user + "'\" | mysql -uroot -proot root";
         byte[] encodedPayload = new byte[0];
         try{
             encodedPayload = payload.getBytes("UTF-8");
