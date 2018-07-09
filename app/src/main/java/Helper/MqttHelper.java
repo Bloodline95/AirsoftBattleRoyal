@@ -13,11 +13,12 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 public class MqttHelper {
     public MqttAndroidClient mqttAndroidClient;
 
-    final String serverUri = "tcp://80.144.172.133:11111";
+    final String serverUri = "tcp://80.144.172.133:1883";
 
     final String clientId = "ExampleAndroidClient";
     final String subscriptionTopic = "test_channel";
@@ -53,6 +54,20 @@ public class MqttHelper {
 
     public void setCallback(MqttCallbackExtended callback) {
         mqttAndroidClient.setCallback(callback);
+    }
+
+    public void send_msg(){
+        MqttMessage message = new MqttMessage("TEST 123".getBytes());
+        message.setQos(2);
+        message.setRetained(false);
+        try{
+            mqttAndroidClient.publish("test_channel", message);
+            Log.i("Mqtt", "Message published");
+        }catch (MqttPersistenceException e){
+            e.printStackTrace();
+        }catch(MqttException e){
+            e.printStackTrace();
+        }
     }
 
     private void connect(){

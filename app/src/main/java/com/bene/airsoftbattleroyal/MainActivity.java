@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 TextView nutzername = findViewById(R.id.editText);
                 username = nutzername.getText().toString();
 
-                //startMqtt();
+                mqttHelper.send_msg();
 
 
                 Intent beitreten_intent = new Intent(MainActivity.this, game_choose.class);
