@@ -15,16 +15,29 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
+
+
+
+
 public class MqttHelper {
+
     public MqttAndroidClient mqttAndroidClient;
 
     final String serverUri = "tcp://80.144.172.133:1883";
 
-    final String clientId = "ExampleAndroidClient";
-    final String subscriptionTopic = "test_channel";
+    String clientId = "ExampleAndroidClient";
 
-    final String username = "xxxxxxx";
-    final String password = "yyyyyyyyyy";
+    String username = "xxxxxxx";
+    String password = "yyyyyyyyyy";
+
+    public void set_username_and_password(String user, String pas)
+    {
+        clientId = user;
+        username = user;
+        password = pas;
+    }
+
+
 
     public MqttHelper(Context context){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
@@ -56,8 +69,8 @@ public class MqttHelper {
         mqttAndroidClient.setCallback(callback);
     }
 
-    public void send_msg(){
-        MqttMessage message = new MqttMessage("TEST 123".getBytes());
+    public void send_msg(String msg){
+        MqttMessage message = new MqttMessage(msg.getBytes());
         message.setQos(2);
         message.setRetained(false);
         try{
@@ -68,6 +81,10 @@ public class MqttHelper {
         }catch(MqttException e){
             e.printStackTrace();
         }
+    }
+
+    public void subscribe(String topic){
+        subscribeToTopic(topic);
     }
 
     private void connect(){
@@ -89,7 +106,6 @@ public class MqttHelper {
                     disconnectedBufferOptions.setPersistBuffer(false);
                     disconnectedBufferOptions.setDeleteOldestMessages(false);
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
-                    subscribeToTopic();
                 }
 
                 @Override
@@ -105,7 +121,7 @@ public class MqttHelper {
     }
 
 
-    private void subscribeToTopic() {
+    private void subscribeToTopic(String subscriptionTopic) {
         try {
             mqttAndroidClient.subscribe(subscriptionTopic, 0, null, new IMqttActionListener() {
                 @Override

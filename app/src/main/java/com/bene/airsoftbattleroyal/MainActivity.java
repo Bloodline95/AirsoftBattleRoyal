@@ -27,23 +27,30 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TAG";
     MqttHelper mqttHelper;
 
-    TextView dataReceived;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        dataReceived = (TextView) findViewById(R.id.dataReceived);
-
-        startMqtt();
         //Spiel erstellen
         final Button btn_erstellen = findViewById(R.id.button_erstellen);
         btn_erstellen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent erstellen_intent = new Intent(MainActivity.this, game_create.class);
-                startActivity(erstellen_intent);
+
+                String username = "";
+                TextView nutzername = findViewById(R.id.editText);
+                username = nutzername.getText().toString();
+
+                if(!username.equals("")) {
+                    mqttHelper.set_username_and_password(username, "1234");
+                    startMqtt();
+                    Intent erstellen_intent = new Intent(MainActivity.this, game_create.class);
+                    startActivity(erstellen_intent);
+                }
+                else{
+                    nutzername.setError("Nutzername eingeben");
+                }
             }
         });
 
@@ -51,16 +58,20 @@ public class MainActivity extends AppCompatActivity {
         final Button btn_beitreten = findViewById(R.id.button_beitreten);
         btn_beitreten.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String username;
+                String username = "";
                 TextView nutzername = findViewById(R.id.editText);
                 username = nutzername.getText().toString();
 
-                mqttHelper.send_msg();
-
-
-                Intent beitreten_intent = new Intent(MainActivity.this, game_choose.class);
-                beitreten_intent.putExtra("USERNAME", username);
-                startActivity(beitreten_intent);
+                if(!username.equals("")) {
+                    mqttHelper.set_username_and_password(username, "1234");
+                    startMqtt();
+                    Intent beitreten_intent = new Intent(MainActivity.this, game_choose.class);
+                    beitreten_intent.putExtra("USERNAME", username);
+                    startActivity(beitreten_intent);
+                }
+                else{
+                    nutzername.setError("Nutzername eingeben");
+                }
             }
         });
 
@@ -83,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
                 Log.w("Debug", mqttMessage.toString());
-                dataReceived.setText(mqttMessage.toString());
             }
 
             @Override
