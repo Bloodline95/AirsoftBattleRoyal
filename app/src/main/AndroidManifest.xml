@@ -28,10 +28,6 @@
             android:name=".MyService"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name=".MQTT_Service"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>

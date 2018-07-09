@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -19,16 +21,23 @@ import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 
+import Helper.MqttHelper;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TAG";
-    public MQTT_Service mqtt;
+    MqttHelper mqttHelper;
+
+    TextView dataReceived;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
+        dataReceived = (TextView) findViewById(R.id.dataReceived);
 
+        startMqtt();
         //Spiel erstellen
         final Button btn_erstellen = findViewById(R.id.button_erstellen);
         btn_erstellen.setOnClickListener(new View.OnClickListener() {
@@ -46,9 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 TextView nutzername = findViewById(R.id.editText);
                 username = nutzername.getText().toString();
 
-                Intent intent = new Intent(MainActivity.this, MQTT_Service.class);
-                intent.putExtra("USERNAME", username);
-                startService(intent);
+                //startMqtt();
 
 
                 Intent beitreten_intent = new Intent(MainActivity.this, game_choose.class);
@@ -60,5 +67,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void startMqtt() {
+        mqttHelper = new MqttHelper(getApplicationContext());
+        mqttHelper.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean b, String s) {
 
+            }
+
+            @Override
+            public void connectionLost(Throwable throwable) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                Log.w("Debug", mqttMessage.toString());
+                dataReceived.setText(mqttMessage.toString());
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+            }
+        });
+
+    }
 }
