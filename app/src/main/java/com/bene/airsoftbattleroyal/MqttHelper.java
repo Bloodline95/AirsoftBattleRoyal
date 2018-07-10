@@ -1,7 +1,9 @@
-package Helper;
+package com.bene.airsoftbattleroyal;
 
-
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
 import android.util.Log;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -15,31 +17,11 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
+public class MqttHelper extends Service {
 
 
+    public MqttHelper(Context context) {
 
-
-public class MqttHelper {
-
-    public MqttAndroidClient mqttAndroidClient;
-
-    final String serverUri = "tcp://80.144.172.133:1883";
-
-    String clientId = "ExampleAndroidClient";
-
-    String username = "xxxxxxx";
-    String password = "yyyyyyyyyy";
-
-    public void set_username_and_password(String user, String pas)
-    {
-        clientId = user;
-        username = user;
-        password = pas;
-    }
-
-
-
-    public MqttHelper(Context context){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -63,6 +45,30 @@ public class MqttHelper {
             }
         });
         connect();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+
+
+    public MqttAndroidClient mqttAndroidClient;
+
+    final String serverUri = "tcp://80.144.172.133:1883";
+
+    String clientId = "ExampleAndroidClient";
+
+    String username = "xxxxxxx";
+    String password = "yyyyyyyyyy";
+
+    public void set_username_and_password(String user, String pas)
+    {
+        clientId = user;
+        username = user;
+        password = pas;
     }
 
     public void setCallback(MqttCallbackExtended callback) {
